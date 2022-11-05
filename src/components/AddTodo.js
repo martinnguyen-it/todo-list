@@ -5,10 +5,8 @@ const AddTodo = ({onAddTodo}) => {
     const [todo, setTodo] = useState('');
     const nameRef = useRef();
 
-    console.log('render- add todo')
 
     const handleAddTodo = () => {
-      console.log('render- callback')
         onAddTodo && onAddTodo(todo);
         setTodo('');
         nameRef.current.focus();

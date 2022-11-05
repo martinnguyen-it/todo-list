@@ -10,9 +10,6 @@ function TodoSections() {
     return JSON.parse(localStorage.getItem("Todo_LIST")) ?? [];
   });
 
-  console.log('render-todocontent')
-
-
   const handleAddTodo = (todo) => {
     if (todo === "") {
       return; 
