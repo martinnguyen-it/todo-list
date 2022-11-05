@@ -1,10 +1,14 @@
+import { render } from "@testing-library/react";
 import { useState } from "react";
 import { v4 } from 'uuid';
 import AddTodo from "./AddTodo";
+import ShowTodo from "./ShowTodo";
 
 
 function TodoSections() {
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState(() => {
+    return JSON.parse(localStorage.getItem("Todo_LIST")) ?? [];
+  });
 
   console.log('render-todocontent')
 
@@ -16,40 +20,55 @@ function TodoSections() {
 
     setTodoList((prevState) => {
       const newTodoList = [...prevState, {id: v4(), name: todo, isCompleted: false}];
+      localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
       return newTodoList;
     });
   };
   
-  const handleDelete = (todo) => {
-    if (todo.name === "") {
-      return;
-    }
+  const handleDelete = (id) => {
     setTodoList((prevState) => {
       const newTodoList = prevState.filter((value) => {
-        return value.id !== todo.id;
+        return value.id !== id;
       })
+      localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
       return newTodoList;
     });
   }
 
-  return (
-    <div className="p-5">
-      <AddTodo onAddTodo={handleAddTodo}/>
+  var completed = todoList.filter((value) => value.isCompleted === true).length;
 
-      <div>
+  const handleChecked = (id) => {
+    setTodoList((prevState) => {
+        const newTodoList = prevState.map((value) => {
+          value.id === id ? value.isCompleted = !value.isCompleted : value.isCompleted = value.isCompleted;
+          return value;
+        })
+        localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
+        return newTodoList;
+      });
+  }
+
+  return (
+    <>
+      <div className="p-5">
+        <AddTodo onAddTodo={handleAddTodo}/>
+      </div>
+
+      <div className="mx-4 my-6 h-96 overflow-auto">
         <ul className="ml-4 list-disc text-lg">
-            {todoList.map((todo, index) => (
-              <li className="flex justify-between py-2.5 px-2.5 border-b border-gray-300" key={index}>
-                <div>
-                  {/* <input onClick={() => handleChecked(index)} type="checkbox" /> */}
-                  <label className="flex-1 px-2 min-w-0 break-words">{todo.name}</label>
-                </div>
-              </li>
+            {todoList.map((todo) => (
+              <ShowTodo todo={todo} onDelete={handleDelete} onChecked={handleChecked} />
             ))}
           </ul>
       </div>
 
-    </div>
+      <div className="px-4 h-12 text-sm bg-gray-300 border-t border-gray-400 flex flex-wrap items-center text-gray-600">
+        <p class="flex-1 order-1">{todoList.length} task</p>
+        <p class="flex-1 order-2 text-center">{completed} complete</p>
+        <p class="flex-1 order-last text-right">{todoList.length - completed} open</p>
+      </div>
+
+    </>
   );
 }
 

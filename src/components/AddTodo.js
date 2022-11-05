@@ -1,13 +1,18 @@
-import { useCallback, useState } from "react";
+import { useRef, useState } from "react";
 import { memo } from "react";
 
 const AddTodo = ({onAddTodo}) => {
     const [todo, setTodo] = useState('');
+    const nameRef = useRef();
 
-    const handleAddTodo = useCallback(() => {
+    console.log('render- add todo')
+
+    const handleAddTodo = () => {
+      console.log('render- callback')
         onAddTodo && onAddTodo(todo);
         setTodo('');
-    }, [todo])
+        nameRef.current.focus();
+    }
 
 
     return (
@@ -15,6 +20,7 @@ const AddTodo = ({onAddTodo}) => {
         <input 
           className="flex-1 px-2.5 bg-gray-200 placeholder-gray-500 focus:outline-none" 
           placeholder="Add task..." 
+          ref={nameRef}
           value={todo} 
           onChange={(e) => setTodo(e.target.value)} />
         <div 
