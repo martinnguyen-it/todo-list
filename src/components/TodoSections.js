@@ -36,7 +36,7 @@ function TodoSections() {
 
   const handleChecked = useCallback((id) => {
     setTodoList((prevState) => {
-        const newTodoList = prevState.map((value) => {
+        const newTodoList = prevState.length !== 0 &&  prevState.map((value) => {
           value.id === id ? value.isCompleted = !value.isCompleted : value.isCompleted = value.isCompleted;
           return value;
         })
@@ -53,7 +53,7 @@ function TodoSections() {
 
       <div className="mx-4 my-6 h-96 overflow-auto">
         <ul className="ml-4 list-disc text-lg">
-            {todoList.map((todo) => (
+            {todoList.length !== 0 && todoList.map((todo) => (
               <ShowTodo todo={todo} onDelete={handleDelete} onChecked={handleChecked} />
             ))}
           </ul>
