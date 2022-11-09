@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { memo } from "react";
 
 const AddTodo = ({onAddTodo}) => {
@@ -6,11 +6,19 @@ const AddTodo = ({onAddTodo}) => {
     const nameRef = useRef();
 
 
-    const handleAddTodo = () => {
-        onAddTodo && onAddTodo(todo);
-        setTodo('');
-        nameRef.current.focus();
-    }
+    const handleAddTodo = useCallback(() => {
+      onAddTodo && onAddTodo(todo);
+      setTodo('');
+      nameRef.current.focus();
+  }, [onAddTodo, todo])
+
+    const handleEnter = useCallback((e) => {
+      e.key === 'Enter' && handleAddTodo();
+    }, [handleAddTodo])
+
+    const handleChangeTodo = useCallback((e) => {
+      setTodo(e.target.value);
+    }, [])
 
 
     return (
@@ -20,8 +28,8 @@ const AddTodo = ({onAddTodo}) => {
           placeholder="Add task..." 
           ref={nameRef}
           value={todo} 
-          onKeyDown={(e) => {e.key === 'Enter' && handleAddTodo()}}
-          onChange={(e) => {setTodo(e.target.value); }} />
+          onKeyDown={handleEnter}
+          onChange={handleChangeTodo} />
         <div 
           className='transition duration-200 ease-in-out text-gray-400 focus:outline-none hover:text-pink-500 text-lg px-2 cursor-pointer' 
           onClick={handleAddTodo}>

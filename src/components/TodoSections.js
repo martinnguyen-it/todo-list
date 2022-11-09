@@ -24,7 +24,6 @@ function TodoSections() {
   const handleDelete = useCallback((id) => {
     setTodoList((prevState) => {
       const newTodoList = prevState.filter((value) => {
-        value.isCompleted === true ? completed++ : completed--;
         return value.id !== id;
       })
       localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
@@ -54,7 +53,7 @@ function TodoSections() {
       <div className="mx-4 my-6 h-96 overflow-auto">
         <ul className="ml-4 list-disc text-lg">
             {todoList.length !== 0 && todoList.map((todo) => (
-              <ShowTodo todo={todo} onDelete={handleDelete} onChecked={handleChecked} />
+              <ShowTodo todo={todo} onDelete={handleDelete} onChecked={handleChecked}/>
             ))}
           </ul>
       </div>

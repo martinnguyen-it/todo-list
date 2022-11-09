@@ -1,14 +1,14 @@
-import { memo } from "react"
+import { memo, useCallback } from "react"
 
 
 const ShowTodo = ({todo, onDelete, onChecked}) => {
-    const handleDelete = () => {
+    const handleDelete = useCallback(() => {
         onDelete && onDelete(todo.id);
-    }
+    }, [onDelete, todo.id])
 
-    const handleChecked = () => {
+    const handleChecked = useCallback(() => {
         onChecked && onChecked(todo.id);
-    }
+    }, [onChecked, todo.id])
 
     let textDecorationClass = todo.isCompleted
         ? "line-through"
