@@ -24,7 +24,6 @@ function TodoSections() {
   const handleDelete = useCallback((id) => {
     setTodoList((prevState) => {
       const newTodoList = prevState.filter((value) => {
-        value.isCompleted === true ? completed++ : completed--;
         return value.id !== id;
       })
       localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
