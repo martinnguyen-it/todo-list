@@ -20,7 +20,8 @@ const AddTodo = ({onAddTodo}) => {
           placeholder="Add task..." 
           ref={nameRef}
           value={todo} 
-          onChange={(e) => setTodo(e.target.value)} />
+          onKeyDown={(e) => {e.key === 'Enter' && handleAddTodo()}}
+          onChange={(e) => {setTodo(e.target.value); }} />
         <div 
           className='transition duration-200 ease-in-out text-gray-400 focus:outline-none hover:text-pink-500 text-lg px-2 cursor-pointer' 
           onClick={handleAddTodo}>
