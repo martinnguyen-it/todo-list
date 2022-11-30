@@ -10,7 +10,7 @@ const AddTodo = ({onAddTodo}) => {
       onAddTodo && onAddTodo(todo);
       setTodo('');
       nameRef.current.focus();
-  }, [onAddTodo, todo])
+    }, [onAddTodo, todo])
 
     const handleEnter = useCallback((e) => {
       e.key === 'Enter' && handleAddTodo();
@@ -30,11 +30,11 @@ const AddTodo = ({onAddTodo}) => {
           value={todo} 
           onKeyDown={handleEnter}
           onChange={handleChangeTodo} />
-        <div 
-          className='transition duration-200 ease-in-out text-gray-400 focus:outline-none hover:text-pink-500 text-lg px-2 cursor-pointer' 
+        <button 
+          className='transition duration-200 ease-in-out text-gray-400 focus:outline-none hover:text-pink-500 text-lg px-2' 
           onClick={handleAddTodo}>
             <i className="fa-solid fa-pen-to-square"></i>
-        </div>  
+        </button>  
       </div>
     )
 }

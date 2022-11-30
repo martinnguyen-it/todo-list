@@ -1,14 +1,21 @@
-import { memo, useCallback } from "react"
+import { memo, useCallback, useState } from "react"
+import { useDispatch } from 'react-redux';
+import todoListSlice from '../redux/todosSlice';
 
 
-const ShowTodo = ({todo, onDelete, onChecked}) => {
+const ShowTodo = ({todo}) => {
+
+    const dispatch = useDispatch();
+
+    const [checked, setChecked] = useState(todo.isCompleted);
+    const handleCheck = useCallback(() => {
+        setChecked(!checked);
+        dispatch(todoListSlice.actions.handleTodoCheck(todo.id));
+    }, [todo.id]);
+
     const handleDelete = useCallback(() => {
-        onDelete && onDelete(todo.id);
-    }, [onDelete, todo.id])
-
-    const handleChecked = useCallback(() => {
-        onChecked && onChecked(todo.id);
-    }, [onChecked, todo.id])
+        dispatch(todoListSlice.actions.handleTodoDelete(todo.id));
+    }, [])
 
     let textDecorationClass = todo.isCompleted
         ? "line-through"
@@ -19,7 +26,7 @@ const ShowTodo = ({todo, onDelete, onChecked}) => {
 
     return (
         <li className={`flex justify-between py-2.5 px-2.5 border-b border-gray-300 ${textDecorationClass} ${textColorClass}`} key={todo.id}>
-            <input className="cursor-pointer" id={todo.id} checked={todo.isCompleted} onClick={handleChecked} type="checkbox" />
+            <input className="cursor-pointer" id={todo.id} checked={todo.isCompleted} onClick={handleCheck} type="checkbox" />
             <label htmlFor={todo.id} className="flex-1 px-2 min-w-0 break-words cursor-pointer">{todo.name}</label>
             <button className='text-gray-400 hover:text-pink-500 focus:outline-none' onClick={handleDelete}><i className="fa-solid fa-trash-can"></i></button> 
         </li>

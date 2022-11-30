@@ -1,48 +1,49 @@
-import { useCallback, useState } from "react";
-import { v4 } from 'uuid';
+import { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import todoListSlice from '../redux/todosSlice';
 import AddTodo from "./AddTodo";
 import ShowTodo from "./ShowTodo";
+import { todoListSelector } from "../redux/selectors";
+import getDataApi from "../redux/getDataApi"
 
 
 function TodoSections() {
-  const [todoList, setTodoList] = useState(() => {
-    return JSON.parse(localStorage.getItem("Todo_LIST")) ?? [];
-  });
+  const dispatch = useDispatch();
+
+  const todoList = useSelector(todoListSelector);
+
+  useEffect(() => {
+    getDataApi().then((data) => {
+      dispatch(
+        todoListSlice.actions.setInitialState(data)
+      );
+      });
+  }, [])
 
   const handleAddTodo = useCallback((todo) => {
     if (todo === "") {
       return; 
     }
 
-    setTodoList((prevState) => {
-      const newTodoList = [...prevState, {id: v4(), name: todo, isCompleted: false}];
-      localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
-      return newTodoList;
-    });
+    dispatch(
+      todoListSlice.actions.addTodo({
+        name: todo,
+        isCompleted: false,
+      })
+    );
   }, [])
   
-  const handleDelete = useCallback((id) => {
-    setTodoList((prevState) => {
-      const newTodoList = prevState.filter((value) => {
-        return value.id !== id;
-      })
-      localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
-      return newTodoList;
-    });
-  }, [])
+  // const handleDelete = useCallback((id) => {
+    // setTodoList((prevState) => {
+    //   const newTodoList = prevState.filter((value) => {
+    //     return value.id !== id;
+    //   })
+    //   localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
+    //   return newTodoList;
+    // });
+  // }, [])
 
   var completed = todoList.filter((value) => value.isCompleted === true).length;
-
-  const handleChecked = useCallback((id) => {
-    setTodoList((prevState) => {
-        const newTodoList = prevState.length !== 0 &&  prevState.map((value) => {
-          value.id === id ? value.isCompleted = !value.isCompleted : value.isCompleted = value.isCompleted;
-          return value;
-        })
-        localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
-        return newTodoList;
-      });
-  }, [todoList])
 
   return (
     <>
@@ -50,10 +51,13 @@ function TodoSections() {
         <AddTodo onAddTodo={handleAddTodo}/>
       </div>
 
-      <div className="mx-4 my-6 h-96 overflow-auto">
+      <div className="mx-2 my-6 h-96 overflow-auto">
         <ul className="ml-4 list-disc text-lg">
             {todoList.length !== 0 && todoList.map((todo) => (
-              <ShowTodo todo={todo} onDelete={handleDelete} onChecked={handleChecked}/>
+              <ShowTodo 
+                key={todo.id}
+                todo={todo} 
+              />
             ))}
           </ul>
       </div>
