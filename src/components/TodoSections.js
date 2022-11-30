@@ -5,6 +5,7 @@ import AddTodo from "./AddTodo";
 import ShowTodo from "./ShowTodo";
 import { todoListSelector } from "../redux/selectors";
 import getDataApi from "../redux/getDataApi"
+import axios from "axios";
 
 
 function TodoSections() {
@@ -24,24 +25,20 @@ function TodoSections() {
     if (todo === "") {
       return; 
     }
-
-    dispatch(
-      todoListSlice.actions.addTodo({
-        name: todo,
-        isCompleted: false,
-      })
-    );
-  }, [])
-  
-  // const handleDelete = useCallback((id) => {
-    // setTodoList((prevState) => {
-    //   const newTodoList = prevState.filter((value) => {
-    //     return value.id !== id;
-    //   })
-    //   localStorage.setItem('Todo_LIST', JSON.stringify(newTodoList))
-    //   return newTodoList;
-    // });
-  // }, [])
+    axios.post('https://638026512f8f56e28e9c895b.mockapi.io/martin', {
+      name: todo,
+      isCompleted: false,
+    })
+    .then((response) => {
+      dispatch(
+          todoListSlice.actions.addTodo({
+            name: response.data.name,
+            isCompleted: response.data.isCompleted,
+            id: response.data.id,
+          })
+        );
+      }, [])
+    }, [todoList])
 
   var completed = todoList.filter((value) => value.isCompleted === true).length;
 

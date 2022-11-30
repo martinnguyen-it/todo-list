@@ -11,7 +11,7 @@ const ShowTodo = ({todo}) => {
     const handleCheck = useCallback(() => {
         setChecked(!checked);
         dispatch(todoListSlice.actions.handleTodoCheck(todo.id));
-    }, [todo.id]);
+    }, [checked, todo.id]);
 
     const handleDelete = useCallback(() => {
         dispatch(todoListSlice.actions.handleTodoDelete(todo.id));
